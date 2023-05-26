@@ -3,6 +3,7 @@ package com.example.yearproject.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -33,8 +34,8 @@ public class User {
     private int yearGraduation;
     @Column(name = "faculty",nullable = false)
     private String faculty;
-//    @Column(name = "image",nullable = true)
-//    private  byte[] image;
+//    @Column(name = "image",nullable = true,length = 64)
+//    private String image="c;
     @Setter
     @Column(name ="is_active")
     private boolean active;
@@ -126,13 +127,7 @@ public class User {
         this.faculty = faculty;
     }
 
-//    public byte[] getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(byte[] image) {
-//        this.image = image;
-//    }
+
 
     public void setActive(boolean active) {
         this.active = active;

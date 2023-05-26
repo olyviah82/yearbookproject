@@ -53,6 +53,7 @@ public class UserController {
                                            @RequestParam("bio") String bio,
                                            @RequestParam("yearGraduation") int yearGraduation,
                                            @RequestParam("faculty") String faculty,
+
                                            @RequestParam(value = "active", defaultValue = "true") boolean active) throws IOException {
         UserCreateForm userCreateForm = new UserCreateForm(firstName, lastName, dob, email, bio, yearGraduation, faculty);
         userCreateForm.setCreatedAt(LocalDateTime.now());

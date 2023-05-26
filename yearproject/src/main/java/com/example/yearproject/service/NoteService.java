@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface NoteService {
 
     List<Note> getAllNotesByRecipient(User recipient);
+    List<Note>getAllNotesBySender(User sender);
 
 
     Optional<Note> getNoteById(Long noteId);

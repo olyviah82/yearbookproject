@@ -20,4 +20,5 @@ Page<Note> findAll(Pageable pageable);
     Page<Note> findByActiveTrue(Pageable pageable);
 
     List<Note> findAllByReceiverId(User recipient);
+    List<Note> findAllBySenderId(User sender);
 }

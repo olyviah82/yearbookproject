@@ -8,6 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserCreateForm userCreateForm) {
-        // Map the fields from UserCreateForm to User entity
-        User user = new User();
+        User user=new User();
         user.setFirstName(userCreateForm.getFirstName());
         user.setLastName(userCreateForm.getLastName());
         user.setDob(userCreateForm.getDob());
@@ -48,8 +51,39 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         user.setActive(userCreateForm.isActive());
         // Save the user entity to the database
+
+
         return userRepository.save(user);
     }
+
+//    @Override
+
+//    public User createUser(UserCreateForm userCreateForm,MultipartFile image) throws IOException {
+//        User user=new User();
+//        if (!image.isEmpty()) {
+//            String fileName = StringUtils.cleanPath(image.getOriginalFilename());
+//            user.setImage(fileName);
+//            User savedUser = userRepository.save(user);
+//
+//            String uploadDir = "user-photos/" + savedUser.getId();
+//            FileUploadUtil.saveFile(uploadDir, fileName, image);
+//        }else{
+//        // Map the fields from UserCreateForm to User entity
+//        user.setFirstName(userCreateForm.getFirstName());
+//        user.setLastName(userCreateForm.getLastName());
+//        user.setDob(userCreateForm.getDob());
+//        user.setEmail(userCreateForm.getEmail());
+//        user.setBio(userCreateForm.getBio());
+//        user.setYearGraduation(userCreateForm.getYearGraduation());
+//        user.setFaculty(userCreateForm.getFaculty());
+//        user.setCreatedAt(LocalDateTime.now());
+//        user.setUpdatedAt(LocalDateTime.now());
+//        user.setActive(userCreateForm.isActive());
+//        // Save the user entity to the database
+//
+//        }
+//        return userRepository.save(user);
+//    }
 
 
 

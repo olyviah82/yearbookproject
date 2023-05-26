@@ -54,14 +54,15 @@ public class NoteController {
                                            }
 
     @GetMapping("/{noteId}")
-    public ResponseEntity<Note> getNoteById(@PathVariable("noteId") Long noteId) {
+    public ResponseEntity<?> getNoteById(@PathVariable("noteId") Long noteId) {
         Optional<Note> noteOptional = noteService.getNoteById(noteId);
 
         if (noteOptional.isPresent()) {
             Note note = noteOptional.get();
             return ResponseEntity.ok(note);
         } else {
-            return ResponseEntity.notFound().build();
+            String errorMessage = "Note not found with ID: " + noteId;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
     }
 
@@ -81,5 +82,19 @@ public class NoteController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/sender/{senderId}")
+    public ResponseEntity<List<Note>> getAllNotesBySender(@PathVariable("senderId")Long senderId){
+        User sender=userService.getUserById(senderId).orElse(null);
+        if(sender !=null){
+            List<Note> notes=noteService.getAllNotesBySender(sender);
+            return ResponseEntity.ok(notes);
+    }
+        else{
+            return ResponseEntity.notFound().build();
+        }
+
+
     }
 }

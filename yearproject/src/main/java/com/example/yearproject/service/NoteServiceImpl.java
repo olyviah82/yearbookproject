@@ -26,6 +26,11 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public List<Note> getAllNotesBySender(User sender) {
+        return noteRepository.findAllBySenderId(sender);
+    }
+
+    @Override
 
     public Optional<Note> getNoteById(Long noteId) {
         return noteRepository.findById(noteId);

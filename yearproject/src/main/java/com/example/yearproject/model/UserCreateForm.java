@@ -1,6 +1,8 @@
 package com.example.yearproject.model;
 
 import jakarta.validation.constraints.*;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -33,14 +35,15 @@ import java.time.LocalDateTime;
 
         @NotNull(message = "Faculty is required")
         private String faculty;
+        private MultipartFile image;
 
 //        private byte[] image;
         private boolean active;
         //constructors
         private  LocalDateTime createdAt;
         private  LocalDateTime updatedAt;
-
-        public UserCreateForm(String firstName, String lastName, LocalDateTime dob, String email, String bio, int yearGraduation, String faculty) {
+        public UserCreateForm(String firstName, String lastName, LocalDateTime dob, String email, String bio, int yearGraduation,
+                              String faculty) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.dob = dob;
@@ -48,13 +51,22 @@ import java.time.LocalDateTime;
             this.bio = bio;
             this.yearGraduation = yearGraduation;
             this.faculty = faculty;
-            this.createdAt=LocalDateTime.now();
+//            this.image=image;
+             this.createdAt=LocalDateTime.now();
             this.updatedAt=LocalDateTime.now();
             this.active=true;
 
         }
         public UserCreateForm() {
             // Default constructor
+        }
+
+        public MultipartFile getImage() {
+            return image;
+        }
+
+        public void setImage(MultipartFile image) {
+            this.image = image;
         }
 
         //getters and setters
