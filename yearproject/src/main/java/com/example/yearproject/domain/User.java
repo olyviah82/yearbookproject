@@ -3,8 +3,8 @@ package com.example.yearproject.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,7 +25,7 @@ public class User {
     @Column(name = "last_name",nullable = false)
     private  String lastName;
     @Column(name = "dob",nullable = false)
-    private LocalDateTime dob;
+    private LocalDate dob;
     @Column(name = "email",nullable = false,unique = true)
     private String email;
     @Column(name = "bio",nullable = false)
@@ -47,7 +47,7 @@ public class User {
     public User(String firstName, String lastName, LocalDateTime dob, String email, String bio, int yearGraduation, String faculty) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.dob = dob;
+        this.dob = LocalDate.from(dob);
         this.email = email;
         this.bio = bio;
         this.yearGraduation = yearGraduation;
@@ -87,11 +87,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public LocalDateTime getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(LocalDateTime dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 

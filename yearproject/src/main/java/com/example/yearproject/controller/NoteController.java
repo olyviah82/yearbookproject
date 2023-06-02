@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/notes")
+@CrossOrigin(origins = "http://localhost:3000")
 public class NoteController {
     private final NoteService noteService;
     private final UserService userService;

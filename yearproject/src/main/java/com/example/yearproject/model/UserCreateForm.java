@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
         private String lastName;
 
         @NotNull(message = "Date of birth is required")
-        private LocalDateTime dob;
+        private LocalDate dob;
 
         @NotBlank(message = "Email is required")
         @Email(message = "Invalid email format")
@@ -30,7 +31,7 @@ import java.time.LocalDateTime;
         private String bio;
 
         @NotNull(message = "Year graduation is required")
-        @Min(value = 1900, message = "Year graduation must be greater than or equal to 1900")
+        @Min(value = 1970, message = "Year graduation must be greater than or equal to 1900")
         private int yearGraduation;
 
         @NotNull(message = "Faculty is required")
@@ -42,7 +43,7 @@ import java.time.LocalDateTime;
         //constructors
         private  LocalDateTime createdAt;
         private  LocalDateTime updatedAt;
-        public UserCreateForm(String firstName, String lastName, LocalDateTime dob, String email, String bio, int yearGraduation,
+        public UserCreateForm(String firstName, String lastName, LocalDate dob, String email, String bio, int yearGraduation,
                               String faculty) {
             this.firstName = firstName;
             this.lastName = lastName;
@@ -86,11 +87,11 @@ import java.time.LocalDateTime;
             this.lastName = lastName;
         }
 
-        public LocalDateTime getDob() {
+        public LocalDate getDob() {
             return dob;
         }
 
-        public void setDob(LocalDateTime dob) {
+        public void setDob(LocalDate dob) {
             this.dob = dob;
         }
 

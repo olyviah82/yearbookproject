@@ -10,15 +10,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     private final UserService userService;
 
@@ -48,14 +49,17 @@ public class UserController {
 
     public ResponseEntity<User> createUser(@RequestParam("firstName") String firstName,
                                            @RequestParam("lastName") String lastName,
-                                           @RequestParam("dob") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dob,
+                                           @RequestParam("dob") String dob,
                                            @RequestParam("email") String email,
                                            @RequestParam("bio") String bio,
                                            @RequestParam("yearGraduation") int yearGraduation,
                                            @RequestParam("faculty") String faculty,
 
                                            @RequestParam(value = "active", defaultValue = "true") boolean active) throws IOException {
-        UserCreateForm userCreateForm = new UserCreateForm(firstName, lastName, dob, email, bio, yearGraduation, faculty);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        System.out.println("Dob ;; "+dob );
+        LocalDate parsedDob = LocalDate.parse(dob, formatter);
+        UserCreateForm userCreateForm = new UserCreateForm(firstName, lastName, parsedDob, email, bio, yearGraduation, faculty);
         userCreateForm.setCreatedAt(LocalDateTime.now());
         userCreateForm.setUpdatedAt(LocalDateTime.now());
         userCreateForm.setActive(active); // Set the active status from the request
@@ -68,8 +72,7 @@ public class UserController {
     public ResponseEntity<User>updateTodo(@RequestParam Long id,
                                           @RequestParam(required = false) String firstName,
                                           @RequestParam(required = false) String lastName,
-                                          @RequestParam(required = false) LocalDateTime dob,
-                                          @RequestParam(required = false) String email,
+                                          @RequestParam(required = false) LocalDate dob,
                                           @RequestParam(required = false) String bio,
                                           @RequestParam(required = false) Integer yearGraduation,
                                           @RequestParam(required = false) String faculty
@@ -89,9 +92,6 @@ public class UserController {
         }
         if (dob != null) {
             existingUser.setDob(dob);
-        }
-        if (email != null) {
-            existingUser.setEmail(email);
         }
         if (bio != null) {
             existingUser.setBio(bio);
