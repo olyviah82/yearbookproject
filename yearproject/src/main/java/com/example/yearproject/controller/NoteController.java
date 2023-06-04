@@ -29,9 +29,9 @@ public class NoteController {
     }
 
 @PostMapping
-    public ResponseEntity<Note> createNote(@RequestParam("content") String content,
-                                           @RequestParam("senderid") User senderId,
-                                           @RequestParam("receiverid") User receiverId) {
+public ResponseEntity<?> createNote(@RequestParam("content") String content,
+                                       @RequestParam("senderid") User senderId,
+                                       @RequestParam("receiverid") User receiverId) {
     Optional<User> senderOptional = userService.getUserById(senderId.getId());
     Optional<User> receiverOptional = userService.getUserById(receiverId.getId());
 
@@ -39,20 +39,31 @@ public class NoteController {
         User sender = senderOptional.get();
         User receiver = receiverOptional.get();
 
-        NoteCreateForm noteCreateForm = new NoteCreateForm();
-        noteCreateForm.setContent(content);
-        noteCreateForm.setSenderId(sender);
-        noteCreateForm.setReceiverId(receiver);
-        noteCreateForm.setCreatedAt(LocalDateTime.now());
-        noteCreateForm.setUpdatedAt(LocalDateTime.now());
-        noteCreateForm.setActive(true);
+        if (sender.isActive() && receiver.isActive()) { // Check if both sender and receiver are active
+            NoteCreateForm noteCreateForm = new NoteCreateForm();
+            noteCreateForm.setContent(content);
+            noteCreateForm.setSenderId(sender);
+            noteCreateForm.setReceiverId(receiver);
+            noteCreateForm.setCreatedAt(LocalDateTime.now());
+            noteCreateForm.setUpdatedAt(LocalDateTime.now());
+            noteCreateForm.setActive(true);
 
-        Note createdNote = noteService.createNote(noteCreateForm);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdNote);
+            Note createdNote = noteService.createNote(noteCreateForm);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdNote);
+        } else {
+            String errorMessage = "";
+            if (!sender.isActive()) {
+                errorMessage += "Sender user is inactive. ";
+            }
+            if (!receiver.isActive()) {
+                errorMessage += "Receiver user is inactive.";
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
     } else {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sender or receiver user not found.");
     }
-                                           }
+}
 
     @GetMapping("/{noteId}")
     public ResponseEntity<?> getNoteById(@PathVariable("noteId") Long noteId) {

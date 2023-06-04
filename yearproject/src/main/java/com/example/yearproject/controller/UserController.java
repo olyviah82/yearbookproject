@@ -34,7 +34,11 @@ public class UserController {
         Optional<User> userOptional = userService.getUserById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            if(user.isActive())
+            {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            }
+            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
