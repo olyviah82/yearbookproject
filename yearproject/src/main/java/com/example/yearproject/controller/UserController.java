@@ -10,11 +10,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -46,6 +48,7 @@ public class UserController {
     @GetMapping("all")
     public ResponseEntity<Page<User>> getAllActiveUsers(Pageable pageable) {
         Page<User> users = userService.getAllActiveUsers(pageable);
+
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -58,16 +61,15 @@ public class UserController {
                                            @RequestParam("bio") String bio,
                                            @RequestParam("yearGraduation") int yearGraduation,
                                            @RequestParam("faculty") String faculty,
-
+                                           @RequestParam("image") MultipartFile image,
                                            @RequestParam(value = "active", defaultValue = "true") boolean active) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        System.out.println("Dob ;; "+dob );
         LocalDate parsedDob = LocalDate.parse(dob, formatter);
-        UserCreateForm userCreateForm = new UserCreateForm(firstName, lastName, parsedDob, email, bio, yearGraduation, faculty);
+        UserCreateForm userCreateForm = new UserCreateForm(firstName, lastName, parsedDob, email, bio, yearGraduation, faculty,image);
         userCreateForm.setCreatedAt(LocalDateTime.now());
         userCreateForm.setUpdatedAt(LocalDateTime.now());
         userCreateForm.setActive(active); // Set the active status from the request
-        User createdUser = userService.createUser(userCreateForm);
+        User createdUser = userService.createUser(userCreateForm,image);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -79,7 +81,8 @@ public class UserController {
                                           @RequestParam(required = false) LocalDate dob,
                                           @RequestParam(required = false) String bio,
                                           @RequestParam(required = false) Integer yearGraduation,
-                                          @RequestParam(required = false) String faculty
+                                          @RequestParam(required = false) String faculty,
+                                          @RequestParam(required = false) MultipartFile image
                                           ){
         Optional<User> userOptional = userService.getUserById(id);
         if (userOptional.isEmpty()) {
@@ -87,25 +90,7 @@ public class UserController {
         }
         User existingUser = userOptional.get();
 
-        // Update the fields if provided
-        if (firstName != null) {
-            existingUser.setFirstName(firstName);
-        }
-        if (lastName != null) {
-            existingUser.setLastName(lastName);
-        }
-        if (dob != null) {
-            existingUser.setDob(dob);
-        }
-        if (bio != null) {
-            existingUser.setBio(bio);
-        }
-        if (yearGraduation != null) {
-            existingUser.setYearGraduation(yearGraduation);
-        }
-        if (faculty != null) {
-            existingUser.setFaculty(faculty);
-        }
+
         existingUser.setUpdatedAt(LocalDateTime.now());
 
         // Update the user
@@ -125,7 +110,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/senders")
+    public ResponseEntity<List<User>> getActiveSenders() {
+        List<User> activeSenders = userService.getActiveSenders();
+        return ResponseEntity.ok(activeSenders);
+    }
 
+    @GetMapping("/receivers")
+    public ResponseEntity<List<User>> getActiveReceivers() {
+        List<User> activeReceivers = userService.getActiveReceivers();
+        return ResponseEntity.ok(activeReceivers);
+    }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(@RequestParam Long id) {

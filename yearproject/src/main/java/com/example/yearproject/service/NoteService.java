@@ -21,7 +21,8 @@ public interface NoteService {
     Note createNote(NoteCreateForm noteCreateForm);
     Page<Note> getAllActiveNotes(Pageable pageable);
 
-    void deleteNoteById(Long noteId);
+    void deleteNoteById(Note note);
+
 
 
 }

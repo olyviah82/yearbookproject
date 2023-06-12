@@ -44,7 +44,7 @@ import java.time.LocalDateTime;
         private  LocalDateTime createdAt;
         private  LocalDateTime updatedAt;
         public UserCreateForm(String firstName, String lastName, LocalDate dob, String email, String bio, int yearGraduation,
-                              String faculty) {
+                              String faculty,MultipartFile image) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.dob = dob;
@@ -52,7 +52,7 @@ import java.time.LocalDateTime;
             this.bio = bio;
             this.yearGraduation = yearGraduation;
             this.faculty = faculty;
-//            this.image=image;
+           this.image=image;
              this.createdAt=LocalDateTime.now();
             this.updatedAt=LocalDateTime.now();
             this.active=true;

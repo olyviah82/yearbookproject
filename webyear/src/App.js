@@ -7,6 +7,11 @@ import AddUser from './components/AddUser';
 import Profile from './components/Profile';
 import EditUser from './components/EditUser';
 import ViewUser from './components/ViewUser';
+import NoteForm from './components/NoteForm';
+import NoteList from './components/NoteList';
+import NoteDetails from './components/NoteDetails';
+import NoteView from './components/NoteView';
+import NoteViewSender from './components/NoteViewSender';
 
 
 
@@ -17,11 +22,15 @@ function App() {
         <Navigation />
         <Container>
           <Routes>
-
-          <Route exact path="/profile"  element={<Profile />} />
-          <Route  exact path="/add" element={<AddUser />}/>
-          <Route exact path='/edituser/:id' element={<EditUser />} />
-          <Route exact path='/viewuser/:id' element={<ViewUser />} />
+            <Route exact path='/noteform' element={<NoteForm />} />
+            <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/add" element={<AddUser />} />
+            <Route exact path='/edituser/:id' element={<EditUser />} />
+            <Route exact path='/viewuser/:id' element={<ViewUser />} />
+            <Route exact path="/notes" element={<NoteList />} />
+            <Route path="/notes/:noteId" element={<NoteDetails />} />
+            <Route path="/notesview" element={<NoteView/>} />
+            <Route path="/notesviewsender" element={<NoteViewSender/>} />
           
           </Routes>
 

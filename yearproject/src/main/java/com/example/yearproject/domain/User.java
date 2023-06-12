@@ -6,8 +6,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -17,34 +20,35 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "first_name",nullable = false,length = 128)
-    @Size(min = 3,max = 128)
+    @Column(name = "first_name", nullable = false, length = 128)
+    @Size(min = 3, max = 128)
     private String firstName;
-    @Column(name = "last_name",nullable = false)
-    private  String lastName;
-    @Column(name = "dob",nullable = false)
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+    @Column(name = "dob", nullable = false)
     private LocalDate dob;
-    @Column(name = "email",nullable = false,unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "bio",nullable = false)
+    @Column(name = "bio", nullable = false)
     private String bio;
-    @Column(name = "year_graduation",nullable = false)
+    @Column(name = "year_graduation", nullable = false)
     private int yearGraduation;
-    @Column(name = "faculty",nullable = false)
+    @Column(name = "faculty", nullable = false)
     private String faculty;
-//    @Column(name = "image",nullable = true,length = 64)
-//    private String image="c;
+
+    @Column(name = "image",nullable = true, length = 64)
+    private String image;
     @Setter
-    @Column(name ="is_active")
+    @Column(name = "is_active")
     private boolean active;
-    @Column(name = "created_at",nullable = false)
-    private  LocalDateTime createdAt;
-    @Column(name = "updated_at",nullable = false)
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public User(String firstName, String lastName, LocalDateTime dob, String email, String bio, int yearGraduation, String faculty) {
+    public User(String firstName, String lastName, LocalDateTime dob, String email, String bio, int yearGraduation, String faculty,String image) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = LocalDate.from(dob);
@@ -52,10 +56,10 @@ public class User {
         this.bio = bio;
         this.yearGraduation = yearGraduation;
         this.faculty = faculty;
-//        this.image = image;
+       this.image = image;
         this.active = true;
-        this.createdAt=LocalDateTime.now();
-        this.updatedAt=LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public boolean isActive() {
@@ -128,7 +132,6 @@ public class User {
     }
 
 
-
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -147,5 +150,16 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+
+
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

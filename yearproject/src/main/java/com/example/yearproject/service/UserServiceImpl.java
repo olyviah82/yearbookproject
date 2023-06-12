@@ -2,6 +2,7 @@ package com.example.yearproject.service;
 
 import com.example.yearproject.domain.User;
 import com.example.yearproject.model.UserCreateForm;
+import com.example.yearproject.model.UserUpdateForm;
 import com.example.yearproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,7 +29,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public Page<User> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable);
@@ -34,84 +36,105 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserById(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
         return userRepository.findById(id);
     }
 
     @Override
-    public User createUser(UserCreateForm userCreateForm) {
-        User user=new User();
-        user.setFirstName(userCreateForm.getFirstName());
-        user.setLastName(userCreateForm.getLastName());
-        user.setDob(userCreateForm.getDob());
-        user.setEmail(userCreateForm.getEmail());
-        user.setBio(userCreateForm.getBio());
-        user.setYearGraduation(userCreateForm.getYearGraduation());
-        user.setFaculty(userCreateForm.getFaculty());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
-        user.setActive(userCreateForm.isActive());
+    public User createUser(UserCreateForm userCreateForm,MultipartFile image) throws IOException {
+        if (userRepository.findByEmail(userCreateForm.getEmail()).isPresent()) {
+            throw new RuntimeException("user already exist ");
+        }
+        User user = User.builder()
+                .firstName(userCreateForm.getFirstName())
+                .lastName(userCreateForm.getLastName())
+                .dob(userCreateForm.getDob())
+                .email(userCreateForm.getEmail())
+                .bio(userCreateForm.getBio())
+                .yearGraduation(userCreateForm.getYearGraduation())
+                .faculty(userCreateForm.getFaculty())
+                .createdAt(userCreateForm.getCreatedAt())
+                .updatedAt(userCreateForm.getUpdatedAt())
+                .active(true)
+                .build();
         // Save the user entity to the database
+        if (!image.isEmpty()) {
+            String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+            String uniqueFileName = generateUniqueFileName(originalFileName);
 
+            user.setImage(uniqueFileName);
+            User savedUser = userRepository.save(user);
 
-        return userRepository.save(user);
+            String uploadDir = "user-photos/" + savedUser.getId();
+            FileUploadUtil.saveFile(uploadDir, uniqueFileName, image);
+        } else {
+            // Save the user entity to the database without an image
+            userRepository.save(user);
+        }
+
+        return user;
     }
 
-//    @Override
+    private String generateUniqueFileName(String originalFileName) {
 
-//    public User createUser(UserCreateForm userCreateForm,MultipartFile image) throws IOException {
-//        User user=new User();
-//        if (!image.isEmpty()) {
-//            String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-//            user.setImage(fileName);
-//            User savedUser = userRepository.save(user);
-//
-//            String uploadDir = "user-photos/" + savedUser.getId();
-//            FileUploadUtil.saveFile(uploadDir, fileName, image);
-//        }else{
-//        // Map the fields from UserCreateForm to User entity
-//        user.setFirstName(userCreateForm.getFirstName());
-//        user.setLastName(userCreateForm.getLastName());
-//        user.setDob(userCreateForm.getDob());
-//        user.setEmail(userCreateForm.getEmail());
-//        user.setBio(userCreateForm.getBio());
-//        user.setYearGraduation(userCreateForm.getYearGraduation());
-//        user.setFaculty(userCreateForm.getFaculty());
-//        user.setCreatedAt(LocalDateTime.now());
-//        user.setUpdatedAt(LocalDateTime.now());
-//        user.setActive(userCreateForm.isActive());
-//        // Save the user entity to the database
-//
-//        }
-//        return userRepository.save(user);
-//    }
+        String uniqueFileName = UUID.randomUUID().toString();
+        String fileExtension = StringUtils.getFilenameExtension(originalFileName);
+        return uniqueFileName + "." + fileExtension;
 
-
+    }
 
 
     @Override
-    public User updateUser(User userCreateForm) {
-        Optional<User> userOptional = userRepository.findById(userCreateForm.getId());
-        if (userOptional.isPresent()) {
-            User existingUser = userOptional.get();
-            if (existingUser.isActive()) {
-                existingUser.setFirstName(userCreateForm.getFirstName());
-                existingUser.setLastName(userCreateForm.getLastName());
-                existingUser.setDob(userCreateForm.getDob());
-                existingUser.setEmail(userCreateForm.getEmail());
-                existingUser.setBio(userCreateForm.getBio());
-                existingUser.setYearGraduation(userCreateForm.getYearGraduation());
-                existingUser.setFaculty(userCreateForm.getFaculty());
-                existingUser.setUpdatedAt(LocalDateTime.now());
-                return userRepository.save(existingUser);
-            } else {
-                // User is not active, return null or handle accordingly
-                return null;
-            }
-        } else {
-            // User not found, return null or handle accordingly
-            return null;
-        }
+    public User updateUser(User user) {
+
+        return userRepository.save(user);
+
     }
+
+    @Override
+    public User updateUser(UserUpdateForm userUpdateForm,MultipartFile image) throws IOException {
+        Optional<User> userOptional = userRepository.findById(userUpdateForm.getUserId());
+        if (userOptional.isEmpty()) throw new RuntimeException("user not found");
+
+
+        User existingUser = userOptional.get();
+        if (!existingUser.isActive()) throw new RuntimeException("user is deactivated contact your administrator");
+
+
+        // Update the fields if provided
+        if (userUpdateForm.getFirstName() != null) {
+            existingUser.setFirstName(userUpdateForm.getFirstName());
+        }
+        if (userUpdateForm.getLastName() != null) {
+            existingUser.setLastName(userUpdateForm.getLastName());
+        }
+        if (userUpdateForm.getDob() != null) {
+            existingUser.setDob(userUpdateForm.getDob());
+        }
+        if (userUpdateForm.getBio() != null) {
+            existingUser.setBio(userUpdateForm.getBio());
+        }
+        if (userUpdateForm.getYearGraduation() != null) {
+            existingUser.setYearGraduation(userUpdateForm.getYearGraduation());
+        }
+        if (userUpdateForm.getFaculty()!= null) {
+            existingUser.setFaculty(userUpdateForm.getFaculty() );
+        }
+        if (!image.isEmpty()) {
+            String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+            String uniqueFileName = generateUniqueFileName(originalFileName);
+
+            existingUser.setImage(uniqueFileName);
+            User savedUser = userRepository.save(existingUser);
+
+            String uploadDir = "user-photos/" + savedUser.getId();
+            FileUploadUtil.saveFile(uploadDir, uniqueFileName, image);
+        }
+       return updateUser(existingUser);
+    }
+
 
     @Override
     public void deactivateUser(Long userId) {
@@ -132,6 +155,14 @@ public class UserServiceImpl implements UserService {
         } else {
             return false;
         }
+    }
+
+    public List<User> getActiveSenders() {
+        return userRepository.findByActive(true);
+    }
+
+    public List<User> getActiveReceivers() {
+        return userRepository.findByActive(true);
     }
 
     @Override

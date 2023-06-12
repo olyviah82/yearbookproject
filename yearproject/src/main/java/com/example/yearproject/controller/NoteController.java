@@ -85,7 +85,7 @@ public ResponseEntity<?> createNote(@RequestParam("content") String content,
     }
     @GetMapping("/receiver/{recipientId}")
     public ResponseEntity<List<Note>> getAllNotesByRecipient(@PathVariable("recipientId") Long recipientId) {
-        // Retrieve the recipient user from the repository or service
+       // Retrieve the recipient user from the repository or service
         User recipient = userService.getUserById(recipientId).orElse(null);
 
         if (recipient != null) {
@@ -108,5 +108,17 @@ public ResponseEntity<?> createNote(@RequestParam("content") String content,
         }
 
 
+
+
+
+    }
+    @DeleteMapping
+public ResponseEntity<?>deleteNote(@RequestParam Long id){
+        Optional<Note> note=noteService.getNoteById(id);
+        if(note.isEmpty()){
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        noteService.deleteNoteById(note.get());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
