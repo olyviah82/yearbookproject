@@ -1,23 +1,28 @@
 package com.example.yearproject.model;
 
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
 import java.time.LocalDate;
+
 @Getter
 @Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 
-public class UserUpdateForm {
-    @NotNull(message = "the userid cannot be empty")
-    private Long userId;
+public class UserDetailsDto {
+    private Long id;
     private String firstName;
-    private  String lastName;
+    private String LastName;
     private LocalDate dob;
+    private String email;
     private String bio;
     private Integer yearGraduation;
     private String faculty;
-    private String image;
-    private String imageUrl;
+    private BufferedImage image;
+
 }

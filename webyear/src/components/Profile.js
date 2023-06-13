@@ -44,7 +44,7 @@ const Profile = () => {
             <div className="card m-b-30">
               <div className="card-body row">
                 <div className="col-6">
-                  <a href=""><img src={user.image} alt="" className="img-fluid rounded-circle w-60" /></a>
+                  <a href=""><img src={`http://localhost:8080${user.imageUrl}`}  alt="" className="img-fluid rounded-circle " /></a>
                 </div>
                 <div className="col-6 card-title align-self-center mb-0 single_advisor_details_info">
                   <h5>{user.firstName} {user.lastName}</h5>

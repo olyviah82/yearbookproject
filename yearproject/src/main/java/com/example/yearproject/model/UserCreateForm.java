@@ -1,6 +1,8 @@
 package com.example.yearproject.model;
 
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,7 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-
+@Getter
+@Setter
     public class UserCreateForm {
 
         @NotBlank(message = "First name is required")
@@ -37,6 +40,7 @@ import java.time.LocalDateTime;
         @NotNull(message = "Faculty is required")
         private String faculty;
         private MultipartFile image;
+        private  String imageUrl;
 
 //        private byte[] image;
         private boolean active;
@@ -44,7 +48,7 @@ import java.time.LocalDateTime;
         private  LocalDateTime createdAt;
         private  LocalDateTime updatedAt;
         public UserCreateForm(String firstName, String lastName, LocalDate dob, String email, String bio, int yearGraduation,
-                              String faculty,MultipartFile image) {
+                              String faculty,MultipartFile image,String imageUrl) {
             this.firstName = firstName;
             this.lastName = lastName;
             this.dob = dob;
@@ -53,6 +57,7 @@ import java.time.LocalDateTime;
             this.yearGraduation = yearGraduation;
             this.faculty = faculty;
            this.image=image;
+           this.imageUrl=imageUrl;
              this.createdAt=LocalDateTime.now();
             this.updatedAt=LocalDateTime.now();
             this.active=true;

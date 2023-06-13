@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             return Optional.empty();
         }
+
+
+
         return userRepository.findById(id);
     }
 
@@ -67,12 +70,17 @@ public class UserServiceImpl implements UserService {
             user.setImage(uniqueFileName);
             User savedUser = userRepository.save(user);
 
-            String uploadDir = "user-photos/" + savedUser.getId();
+            String uploadDir = "photos/" + savedUser.getId();
             FileUploadUtil.saveFile(uploadDir, uniqueFileName, image);
+
+            String imageUrl = "/api/images/" + savedUser.getId() + "/" + uniqueFileName;
+            savedUser.setImageUrl(imageUrl);
+            userRepository.save(savedUser);
         } else {
             // Save the user entity to the database without an image
             userRepository.save(user);
         }
+
 
         return user;
     }
@@ -123,14 +131,20 @@ public class UserServiceImpl implements UserService {
             existingUser.setFaculty(userUpdateForm.getFaculty() );
         }
         if (!image.isEmpty()) {
-            String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
-            String uniqueFileName = generateUniqueFileName(originalFileName);
+            if (!image.isEmpty()) {
 
-            existingUser.setImage(uniqueFileName);
-            User savedUser = userRepository.save(existingUser);
+                existingUser = userRepository.save(existingUser);
 
-            String uploadDir = "user-photos/" + savedUser.getId();
-            FileUploadUtil.saveFile(uploadDir, uniqueFileName, image);
+                String uploadDir = "photos/" + existingUser.getId();
+                String uniqueFileName = generateUniqueFileName(image.getOriginalFilename());
+                FileUploadUtil.saveFile(uploadDir, uniqueFileName, image);
+
+                existingUser.setImage(uniqueFileName);
+
+            } else {
+                // Save the user entity to the database without an image
+                userRepository.save(existingUser);
+            }
         }
        return updateUser(existingUser);
     }
@@ -168,6 +182,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> getAllActiveUsers(Pageable pageable) {
         return userRepository.findByActiveTrue(pageable);
+
     }
 
 

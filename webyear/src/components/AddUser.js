@@ -67,9 +67,8 @@ const AddUser = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setUser({ ...user, profilePhoto: file });
-    setImagePreview(URL.createObjectURL(file));
-    setImage(file);
-    setImageName(file.name);
+       setImage(file);
+    
   };
 
   const onSubmit = async (e) => {
