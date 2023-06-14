@@ -12,6 +12,7 @@ import NoteList from './components/NoteList';
 import NoteDetails from './components/NoteDetails';
 import NoteView from './components/NoteView';
 import NoteViewSender from './components/NoteViewSender';
+import TemporaryDrawer from './pages/TemporaryDrawer';
 
 
 
@@ -20,6 +21,7 @@ function App() {
     <div className="App">
       <Router>
         <Navigation />
+        <TemporaryDrawer />
         <Container>
           <Routes>
             <Route exact path='/noteform' element={<NoteForm />} />
