@@ -93,7 +93,7 @@ export default function TemporaryDrawer() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Persistent drawer
+                     YearBook 
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -130,8 +130,8 @@ export default function TemporaryDrawer() {
                 </List>
                 <Divider />
                 <List>
-                    {['Notes', 'NoteRecieved', 'NoteList'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
+                    {['CreateNotes', 'ReceivedNotes', 'SentNotes','ViewNotes'].map((text, index) => (
+                       <ListItem key={text} disablePadding component={Link} to={index === 0 ? "/noteform" : (index === 1 ? "/notesview" : (index === 2 ? "/notesviewsender" : "/notes"))}>
                             <ListItemButton>
                                 <ListItemIcon>
                                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}

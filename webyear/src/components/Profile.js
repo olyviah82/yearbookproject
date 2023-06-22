@@ -20,12 +20,14 @@ const deactivateUser = async (userId) => {
     }
   }
 };
+  
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
   {
     field: 'image',
     headerName: 'image',
     width: 120,
+    editable:true,
     renderCell: (params) => (
       <Avatar
         alt="User Image"
@@ -34,10 +36,13 @@ const columns = [
       />
     ),
   },
-  { field: 'firstname', headerName: 'First name', width: 80 },
-  { field: 'lastname', headerName: 'Last name', width: 80 },
+  { field: 'firstname', headerName: 'First name', width: 80, editable: true,  headerClassName: 'super-app-theme--header',
+  headerAlign: 'center', },
+  { field: 'lastname', headerName: 'Last name', width: 80, editable: true,  headerClassName: 'super-app-theme--header',
+  headerAlign: 'center', },
   {
-    field: 'dob', headerName: 'Date of Birth', width: 90
+    field: 'dob', headerName: 'Date of Birth',type: 'date', width: 90, editable: true, valueGetter: (params) => new Date(params.value),  headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
   },
   {
     field: 'fullName',
@@ -48,10 +53,10 @@ const columns = [
     valueGetter: (params) =>
       `${params.row.firstname || ''} ${params.row.lastname || ''}`,
   },
-  { field: 'email', headerName: 'Email Address', width: 130 },
-  { field: 'bio', headerName: 'Bio', width: 160 },
-  { field: 'yearGraduation', headerName: 'Year of Graduation', width: 90 },
-  { field: 'faculty', headerName: 'faculty', width: 90 },
+  { field: 'email', headerName: 'Email Address', width: 130, editable: true },
+  { field: 'bio', headerName: 'Bio', width: 160, editable: true },
+  { field: 'yearGraduation', headerName: 'Year of Graduation', width: 90, editable: true },
+  { field: 'faculty', headerName: 'faculty', width: 90, editable: true },
   {
     field: 'actions',
     headerName: 'Action',
@@ -65,24 +70,17 @@ const columns = [
           Edit
         </Link>
         <button className="btn btn-secondary tooltips"
-                    data-placement="top"
-                    data-toggle="tooltip"
-                    data-original-title="Deactivate"
-                    onClick={() => deactivateUser(params.row.id)}
-                  >
-                    <i className="fa fa-times"></i>
-                  </button>
-        </div>
+          data-placement="top"
+          data-toggle="tooltip"
+          data-original-title="Deactivate"
+          onClick={() => deactivateUser(params.row.id)}
+        >
+          <i className="fa fa-times"></i>
+        </button>
+      </div>
     ),
   },
 ];
-
-
-
-
-
-
-
 
 const Profile = () => {
   const [users, setUsers] = useState([]);
@@ -114,7 +112,19 @@ const Profile = () => {
       }
     }
   };
-
+  const handleEditCellChangeCommitted = async (params) => {
+    const field = params.field;
+    const value = params.value;
+    const id = params.id;
+  
+    try {
+      await axios.put(`http://localhost:8080/user/${id}`, { [field]: value });
+      console.log('User updated successfully.');
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
+  
 
   const rows = users.map((user, index) => ({
     id: user.id,
@@ -128,14 +138,19 @@ const Profile = () => {
     faculty: user.faculty
   }));
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    setSelectedFiles(files);
+  };
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="row">
 
-        <div style={{ height: 400, width: '90%' }}>
+        <div style={{ height: 400, width: '100%', alignContent:'center',justifyContent:'center'  }}>
           <DataGrid
-          autoHeight
+            autoHeight
             rows={rows}
             columns={columns}
             initialState={{
@@ -145,11 +160,13 @@ const Profile = () => {
             }}
             pageSizeOptions={[5, 10]}
             checkboxSelection
+            disableSelectionOnClick
+            onEditCellChangeCommitted={handleEditCellChangeCommitted}
           />
         </div>
 
 
-        
+
       </div>
     </div>
 

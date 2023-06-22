@@ -1,8 +1,6 @@
 import './App.css';
-import './pages/Navigation'
 import { Container } from 'react-bootstrap'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Navigation from './pages/Navigation';
 import AddUser from './components/AddUser';
 import Profile from './components/Profile';
 import EditUser from './components/EditUser';
@@ -20,7 +18,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navigation />
+        
         <TemporaryDrawer />
         <Container>
           <Routes>

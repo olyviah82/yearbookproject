@@ -18,9 +18,9 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
+} 
 
-.App-link {
+ .App-link {
   color: #61dafb;
 }
 
@@ -32,9 +32,9 @@
   to {
     transform: rotate(360deg);
   }
-}
+} 
 
-body {
+ body {
   margin-top: 20px;
   color: #1a202c;
   text-align: left;
@@ -78,9 +78,9 @@ body {
 
 .shadow-none {
   box-shadow: none !important;
-}
+} 
 
-.bg-white {
+ .bg-white {
   background-color: #fff !important;
 }
 
@@ -97,9 +97,9 @@ body {
 
 .card-footer:last-child {
   border-radius: 0 0 .25rem .25rem;
-}
+} 
 
-.card-footer,
+ .card-footer,
 .card-header {
   display: flex;
   align-items: center;
@@ -116,9 +116,9 @@ body {
   -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
   margin-bottom: 30px;
-}
+} 
 
-.w-60 {
+ .w-60 {
   width: 60px;
 }
 
@@ -165,7 +165,7 @@ a {
   border-radius: 7px;
   text-decoration: none;
   color: black
-}
+} 
 
 a:hover {
   color: #e0726c;
@@ -180,16 +180,16 @@ a:hover {
 
 input,
 button {
-  width: 96%;
+  
   background-color: #fff2f1;
   border-radius: 8px;
   padding: 8px 17px;
   font-size: 13px;
   border: 1px solid #f5f0ef;
   color: #dccece
-}
+} 
 
-input {
+ input {
   text-decoration: none
 }
 
@@ -220,12 +220,12 @@ img {
 
 .wlcm {
   font-size: 30px
-}
+} 
 
-.sp1 {
+ .sp1 {
   font-size: 5px
 }
 
 .sp1>span {
   background-color: #f0c3be
-}
+} 
